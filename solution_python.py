@@ -3,41 +3,40 @@ class EventSourcer():
 
     def __init__(self):
         self.value = 0
-        self.undoList = []
-        self.redoList = []
+        self.actionList = []
+        self.position = -1
+
 
     def add(self, num: int):
         self.value += num
-        self.undoList += [("+",num)]
-        print(str(self.undoList) + "  ,  " + str(self.value))
-        #self.redoList = []
+        self.actionList += [("+",num)]
+        self.position +=1
+
 
 
     def subtract(self, num: int):
         self.value -= num
-        self.undoList += [("-",num)]
-        #self.redoList = []
+        self.actionList += [("-",num)]
+        self.position +=1
 
     def undo(self):
-        if (len(self.undoList) == 0):
+        if (self.position == -1):
             return
-        if (self.undoList[-1][0] == "+"):
-            self.value -= self.undoList[-1][1]
+        if (self.actionList[self.position][0] == "+"):
+            self.value -= self.actionList[self.position][1]
         else:
-            self.value += self.undoList[-1][1]
-        self.redoList += self.undoList[-1:]
-        del self.undoList[-1]
+            self.value += self.actionList[self.position][1]
+        self.position -= 1
 
 
     def redo(self):
-        if (len(self.redoList) == 0):
+        if (self.position == len(self.actionList) - 1):
             return
-        if (self.redoList[-1][0] == "+"):
-            self.value += self.redoList[-1][1]
+        if (self.actionList[self.position+1][0] == "+"):
+            self.value += self.actionList[self.position][1]
         else:
-            self.value -= self.redoList[-1][1]
-        self.undoList += self.redoList[-1:]
-        del self.redoList[-1]
+            self.value -= self.actionList[self.position][1]
+        self.position += 1
 
     def bulk_undo(self, steps: int):
         for i in range(steps):
