@@ -9,15 +9,21 @@ class EventSourcer():
 
     def add(self, num: int):
         self.value += num
-        self.actionList += [("+",num)]
         self.position +=1
-
+        if (self.position == len(self.actionList)):
+            self.actionList += [("+",num)]
+        else:
+            self.actionList[self.position+1] = ("+",num)
 
 
     def subtract(self, num: int):
         self.value -= num
-        self.actionList += [("-",num)]
         self.position +=1
+        if (self.position == len(self.actionList)):
+            self.actionList += [("-",num)]
+        else:
+            self.actionList[self.position+1] = ("-",num)
+
 
     def undo(self):
         if (self.position == -1):
